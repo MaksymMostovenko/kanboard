@@ -1,26 +1,26 @@
 package TestBackend;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+
+import static com.codeborne.selenide.Selenide.$;
 
 public class PageLogin extends PageObject {
-    private final By USERNAME_FIELD = By.id("username");
-    private final By PASSWORD_FIELD = By.id("password");
-    private final By LOGIN_BUTTON = By.id("login-button");
+    private static final String USERNAME_FIELD = "#username";
+    private static final String PASSWORD_FIELD = "#password";
+    private static final String LOGIN_BUTTON = "#login-button";
+    private static final String ERROR_MESSAGE = "#error-message";
 
-    public PageLogin(WebDriver driver) {
-        super(driver);
+    public void enterUsername(String username) {
+        setValue(USERNAME_FIELD, username);
     }
 
-    public void login(String username, String password) {
-        inputText(USERNAME_FIELD, username);
-        inputText(PASSWORD_FIELD, password);
+    public void enterPassword(String password) {
+        setValue(PASSWORD_FIELD, password);
+    }
+
+    public void clickLoginButton() {
         click(LOGIN_BUTTON);
     }
 
-    // Add more login-related methods if needed
-
-    public boolean isLoginPageDisplayed() {
-        return isDisplayed(USERNAME_FIELD) && isDisplayed(PASSWORD_FIELD) && isDisplayed(LOGIN_BUTTON);
+    public String getErrorMessage() {
+        return getText(ERROR_MESSAGE);
     }
 }
-

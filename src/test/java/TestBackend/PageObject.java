@@ -1,48 +1,36 @@
 package TestBackend;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.codeborne.selenide.Condition;
+import static com.codeborne.selenide.Selenide.$;
 
 public class PageObject {
-        protected WebDriver driver;
-        protected WebDriverWait wait;
-        private final int ACTION_TIMEOUT = 3;
+    private static final int DEFAULT_TIMEOUT_SECONDS = 3;
 
-        public PageObject(WebDriver driver) {
-            this.driver = driver;
-            this.wait = new WebDriverWait(driver, ACTION_TIMEOUT);
-        }
+    protected void click(String selector) {
+        $(selector).shouldBe(Condition.visible).click();
+    }
 
-        protected WebElement getElement(By locator) {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        }
+    protected void setValue(String selector, String value) {
+        $(selector).shouldBe(Condition.visible).setValue(value);
+    }
 
-        protected void click(By locator) {
-            getElement(locator).click();
-        }
+    protected String getText(String selector) {
+        return $(selector).shouldBe(Condition.visible).getText();
+    }
 
-        protected void inputText(By locator, String text) {
-            WebElement element = getElement(locator);
-            element.clear();
-            element.sendKeys(text);
-        }
+    protected void waitForElementVisible(String selector) {
+        $(selector).shouldBe(Condition.visible);
+    }
 
-        protected String getText(By locator) {
-            return getElement(locator).getText();
-        }
+    protected void waitForElementText(String selector, String expectedText) {
+        $(selector).shouldBe(Condition.text(expectedText));
+    }
 
-        protected boolean isDisplayed(By locator) {
-            try {
-                return getElement(locator).isDisplayed();
-            } catch (TimeoutException e) {
-                return false;
-            }
-        }
+    protected void waitForElementNotVisible(String selector) {
+        $(selector).shouldNotBe(Condition.visible);
+    }
 
-        // Add more common actions or utility methods as needed
+    // Additional methods for commonly used actions can be added here
 }
+
 
