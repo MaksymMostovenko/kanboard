@@ -1,4 +1,4 @@
-package Tests;
+package TestBackend;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;

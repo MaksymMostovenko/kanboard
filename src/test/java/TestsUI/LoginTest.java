@@ -1,5 +1,6 @@
-package Tests;
+package TestsUI;
 
+import TestBackend.DockerAppVerification;
 import com.codeborne.selenide.Configuration;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
