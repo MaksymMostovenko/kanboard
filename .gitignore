@@ -39,10 +39,7 @@ build/
 
 # IntelliJ IDEA
 .idea/
-*.iml
-*.iws
 out/
-target/
 
 # Compiled files
 *.class
@@ -67,19 +64,13 @@ logs/
 
 # Build directories
 bin/
-build/
 dist/
 deploy/
 .gradle/
 .mvn/
-.vscode/
-target/
-out/
 gen/
-out/
 
 # OtherS
-.DS_Store
 Thumbs.db
 .desktop.ini
 *.swp

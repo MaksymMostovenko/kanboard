@@ -6,20 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class RemoveUser {
+public class GetAllUsers {
     private String jsonrpc;
     private String method;
-    private long id;
-    private Params params;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class Params {
-        private Integer user_id;
-    }
+    private int id;
 }
+

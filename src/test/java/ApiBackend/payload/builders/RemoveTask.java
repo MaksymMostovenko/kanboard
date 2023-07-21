@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RemoveUser {
+public class RemoveTask {
     private String jsonrpc;
     private String method;
     private long id;
@@ -20,6 +20,6 @@ public class RemoveUser {
     @AllArgsConstructor
     @Builder
     public static class Params {
-        private Integer user_id;
+        private int task_id;
     }
 }
