@@ -1,8 +1,9 @@
-package ApiBackend.payload;
+package ApiBackend.payload.builders;
 
 import lombok.*;
 
 
+    @Data
     @Getter
     @Setter
     @AllArgsConstructor
@@ -12,14 +13,15 @@ import lombok.*;
          private String jsonrpc;
          private String method;
          private int id;
-         private Credentials credentials;
+         private params params;
 
+        @Data
         @Getter
         @Setter
         @AllArgsConstructor
         @NoArgsConstructor
         @Builder
-        public static class Credentials {
+        public static class params {
             private String username;
             private String password;
         }
