@@ -6,21 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CreateTask {
+public class GetTaskById {
     private String jsonrpc;
     private String method;
     private int id;
     private Params params;
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
-    public static class Params {
-        private String title;
-        private int project_id;
+    public static class Params{
+        private int task_id;
     }
 }

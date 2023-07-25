@@ -1,114 +1,157 @@
 package ApiBackend;
 
-
 import ApiBackend.payload.Payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 
-import java.util.List;
+import static TestApi.Tests.PROJECT_FOR_A_TASK_TESTING;
+import static java.lang.Integer.parseInt;
 
-public class ApiUtility {
-    public static final String JSONRPC = "jsonrpc";
-    public static final String AUTH_TOKEN = "fabab672f147a3b52f9cec09180b36da0927f605e4ac7025284719303b91";
-    private static final Integer HTTP_SUCCESS_CODE = 200;
-    private static final String  ENDPOINT = "http://127.0.0.1/jsonrpc.php";
+public class ApiUtility implements ApiUtilityConstants {
 
+    private final Payload payload;
 
-    Payload payload;
-    public ApiUtility(){
+    public ApiUtility() {
         this.payload = new Payload();
     }
 
+    private Response sendRequest(String body) {
+        return RestAssured.given()
+                .baseUri(ENDPOINT)
+                .auth().basic(JSONRPC, AUTH_TOKEN)
+                .header("Content-Type", "application/json")
+                .body(body)
+                .post();
+    }
+
+    private int extractUserId(Response response) {
+        return Integer.valueOf(response.getBody().jsonPath().getString("result.id"));
+    }
 
     public ApiUtility createUser(String username, String password) throws JsonProcessingException {
-        RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.createUser(username,password))
-                .post()
+        sendRequest(payload.createUser(username, password))
                 .then()
                 .statusCode(HTTP_SUCCESS_CODE);
         return this;
     }
 
-    public ApiUtility removeUser(Integer userId) throws JsonProcessingException {
-        RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.removeUser(userId))
-                .post()
+    public ApiUtility removeUserById(int userId) throws JsonProcessingException {
+        sendRequest(payload.removeUser(userId))
                 .then()
                 .statusCode(HTTP_SUCCESS_CODE);
         return this;
     }
 
-    public ApiUtility createTask() throws JsonProcessingException {
-        RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.createNewTask())
-                .post()
-                .then().statusCode(HTTP_SUCCESS_CODE);
+    public int getUserId(String username) throws JsonProcessingException {
+        Response response = sendRequest(payload.getUserByName(username));
+        return extractUserId(response);
+    }
+
+    public ApiUtility assertUserAdd(String username) throws JsonProcessingException {
+        sendRequest(payload.getUserByName(username))
+                .then()
+                .assertThat().statusCode(HTTP_SUCCESS_CODE)
+                    .body("result.username", Matchers.equalTo(username));
         return this;
     }
 
-    public ApiUtility deleteTask(Integer taskId) throws JsonProcessingException {
-        RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.deleteTask(taskId))
-                .post()
-                .then().statusCode(HTTP_SUCCESS_CODE);
-        return this;
-    }
-
-    public ApiUtility createProject(String projName) throws JsonProcessingException {
-        RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.createProject(projName))
-                .post()
-                .then().statusCode(HTTP_SUCCESS_CODE);
-        return this;
-    }
-
-    public ApiUtility removeProject(Integer projId) throws JsonProcessingException {
-        RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.removeProject(projId))
-                .post()
-                .then().statusCode(HTTP_SUCCESS_CODE);
+    public ApiUtility assertRemovalByUsername(String username) throws JsonProcessingException {
+        Response response = sendRequest(payload.getUserByName(username));
+        response.then().assertThat().statusCode(HTTP_SUCCESS_CODE)
+                .body("result", Matchers.equalTo(null));
         return this;
     }
 
     public void removeAllUsers() throws JsonProcessingException {
-        Response allUsers = RestAssured.given()
-                .baseUri(ENDPOINT)
-                .auth().basic(JSONRPC, AUTH_TOKEN)
-                .header("Content-Type", "application/json")
-                .body(payload.getAllUsers())
-                .post();
-
-        List<Object> resultList = allUsers.getBody().jsonPath().getList("result.id");
+        Response allUsers = sendRequest(payload.getAllUsers());
         String resultString = allUsers.getBody().jsonPath().getString("result.id");
-        System.out.println("Result String: " + resultString);
-
         String cleanString = resultString.replaceAll("[\\[\\] ]", "");
         String[] digitStrings = cleanString.split(",");
 
         for (String digitString : digitStrings) {
-            int id = Integer.parseInt(digitString);
-            if(id != 1) {
-                removeUser(id);
+            int id = parseInt(digitString);
+            if (id != 1) {
+                removeUserById(id);
             }
         }
     }
+
+    public ApiUtility createTask(String title, int projectId) throws JsonProcessingException {
+          sendRequest(payload.createNewTask(title, projectId))
+                .then()
+                .statusCode(HTTP_SUCCESS_CODE);
+        return this;
+    }
+
+    public ApiUtility deleteTask(int taskId) throws JsonProcessingException {
+        sendRequest(payload.deleteTask(taskId))
+                .then()
+                .statusCode(HTTP_SUCCESS_CODE);
+        return this;
+    }
+
+    public int getTaskId(int projectId) throws JsonProcessingException {
+        Response task = sendRequest(payload.getTaskByAssignee(projectId));
+        task.then().statusCode(HTTP_SUCCESS_CODE);
+        return  task.getBody().jsonPath().getInt("result[0].id");
+    }
+
+    public ApiUtility assertTaskCreate(String title,  int projectId) throws JsonProcessingException {
+        sendRequest(payload.getTaskByAssignee(projectId)).then().assertThat().statusCode(HTTP_SUCCESS_CODE).body("result[0].title", Matchers.equalTo(title));
+        return this;
+    }
+
+    public ApiUtility assertTaskDelete() throws JsonProcessingException {
+        sendRequest(payload.getTaskByAssignee(getProjectId(PROJECT_FOR_A_TASK_TESTING))).then().assertThat().body("result[0]",Matchers.equalTo(null));
+        return this;
+    }
+
+    public ApiUtility createProject(String projName) throws JsonProcessingException {
+        sendRequest(payload.createProject(projName)).then().statusCode(HTTP_SUCCESS_CODE);
+        return this;
+    }
+
+    public ApiUtility removeProject(int projId) throws JsonProcessingException {
+          sendRequest(payload.removeProject(projId))
+                .then()
+                .statusCode(HTTP_SUCCESS_CODE);
+        return this;
+    }
+
+    public int getProjectId(String projectName) throws JsonProcessingException {
+        Response project = sendRequest(payload.getProjectByName(projectName));
+        return project.getBody().jsonPath().getInt("result.id");
+    }
+    public void removeAllProjects() throws JsonProcessingException {
+        Response allProjects = sendRequest(payload.getAllProjects());
+        String resultString = allProjects.getBody().jsonPath().getString("result.id");
+        String cleanString = resultString.replaceAll("[\\[\\] ]", "");
+        String[] digitStrings = cleanString.split(",");
+
+        for (String digitString : digitStrings) {
+            if (!digitString.isEmpty()) {
+                int id = parseInt(digitString);
+                removeProject(id);
+            }
+        }
+    }
+
+    public ApiUtility assertProjectAdd(String projectName) throws JsonProcessingException {
+        sendRequest(payload.getProjectByName(projectName))
+                .then().assertThat().statusCode(HTTP_SUCCESS_CODE)
+                .body("result.name", Matchers.equalTo(projectName));
+        return this;
+    }
+
+    public ApiUtility assertRemovalProject(int id) throws JsonProcessingException {
+        sendRequest(payload.getProjectById(id))
+                .then()
+                .assertThat().statusCode(HTTP_SUCCESS_CODE)
+                .body("data", Matchers.equalTo("Missing argument: project_id"));
+        return this;
+    }
+
+
 }

@@ -1,10 +1,14 @@
 package ApiBackend.payload.builders;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RemoveProject {
     private String jsonrpc;
     private String method;
@@ -13,8 +17,10 @@ public class RemoveProject {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Params {
-        private Integer project_id;
+        private int project_id;
     }
 }
 

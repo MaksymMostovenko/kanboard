@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class RemoveTask {
     private String jsonrpc;
     private String method;
-    private long id;
+    private int id;
     private Params params;
 
     @Data
