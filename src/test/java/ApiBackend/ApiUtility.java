@@ -145,13 +145,11 @@ public class ApiUtility implements ApiUtilityConstants {
         return this;
     }
 
-    public ApiUtility assertRemovalProject(int id) throws JsonProcessingException {
+    public ApiUtility assertRemoveProject(int id) throws JsonProcessingException {
         sendRequest(payload.getProjectById(id))
                 .then()
                 .assertThat().statusCode(HTTP_SUCCESS_CODE)
-                .body("data", Matchers.equalTo("Missing argument: project_id"));
+                .body("error.data", Matchers.equalTo("Missing argument: project_id"));
         return this;
     }
-
-
 }
