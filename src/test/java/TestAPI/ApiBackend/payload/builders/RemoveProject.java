@@ -1,4 +1,4 @@
-package ApiBackend.payload.builders;
+package TestApi.ApiBackend.payload.builders;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateProject {
+public class RemoveProject {
     private String jsonrpc;
     private String method;
     private long id;
@@ -19,7 +19,8 @@ public class CreateProject {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-        public static class Params {
-            private String name;
-        }
+    public static class Params {
+        private int project_id;
+    }
 }
+

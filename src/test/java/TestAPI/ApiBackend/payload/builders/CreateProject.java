@@ -1,4 +1,4 @@
-package ApiBackend.payload.builders;
+package TestApi.ApiBackend.payload.builders;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,18 +9,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetTaskByAssignee {
+public class CreateProject {
     private String jsonrpc;
     private String method;
-    private int id;
+    private long id;
     private Params params;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Params{
-        private int project_id;
-        private String query;
-    }
+        public static class Params {
+            private String name;
+        }
 }

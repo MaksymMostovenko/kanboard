@@ -1,4 +1,4 @@
-package ApiBackend.payload;
+package TestApi.ApiBackend.payload;
 
 public interface PayloadConst {
     String JSONRPC = "2.0";

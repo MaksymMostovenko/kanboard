@@ -1,6 +1,6 @@
-package ApiBackend;
+package TestApi.ApiBackend;
 
-import ApiBackend.payload.Payload;
+import TestApi.ApiBackend.payload.Payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;

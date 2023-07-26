@@ -1,6 +1,6 @@
-package ApiBackend.payload;
+package TestApi.ApiBackend.payload;
 
-import ApiBackend.payload.builders.*;
+import TestApi.ApiBackend.payload.builders.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1,4 +1,4 @@
-package ApiBackend.payload.builders;
+package TestApi.ApiBackend.payload.builders;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAllProjects {
+public class GetAllUsers {
     private String jsonrpc;
     private String method;
     private int id;
 }
+

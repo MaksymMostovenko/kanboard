@@ -14,6 +14,12 @@
             <class name="TestsUI.Tests.LoginTest"/>
         </classes>
     </test>
+    
+    <test name="Api Tests">
+        <classes>
+            <class name="TestApi.Tests"></class>
+        </classes>
+    </test>
 
     <test name="Chrome Headless Test">
         <parameter name="browser" value="chrome"/>

@@ -1,6 +1,6 @@
 package TestApi;
 
-import ApiBackend.ApiUtility;
+import TestApi.ApiBackend.ApiUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -44,11 +44,12 @@ public class Tests {
 
     @Test
     public void createDeleteProject() throws JsonProcessingException {
-        // TODO assertRemovalProject(apiUtility.getProjectId(FANCY_TEST_PROJECT)) now work because of GET removed project
-//        apiUtility.createProject(FANCY_TEST_PROJECT)
-//                .assertProjectAdd(FANCY_TEST_PROJECT)
-//                .removeProject(apiUtility.getProjectId(FANCY_TEST_PROJECT))
-//                .assertRemovalProject(apiUtility.getProjectId(FANCY_TEST_PROJECT));
+        ApiUtility apiProjects = new ApiUtility();
+        apiProjects.createProject(FANCY_TEST_PROJECT);
+        apiProjects.assertProjectAdd(FANCY_TEST_PROJECT);
+        int projectId = apiProjects.getProjectId(FANCY_TEST_PROJECT);
+        apiProjects.removeProject(projectId)
+                   .assertRemoveProject(projectId);
     }
 
     @Test
