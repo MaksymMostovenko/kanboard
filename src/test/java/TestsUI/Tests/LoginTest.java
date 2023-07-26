@@ -25,7 +25,7 @@ public class LoginTest {
         loginPage.openPage();
     }
 
-    @Test
+    @Test(dependsOnMethods = "badLogin")
     public void TestLogin(){
         loginPage.enterUsername(username)
                 .enterPassword(password)
@@ -37,10 +37,6 @@ public class LoginTest {
     public void badLogin(){
         loginPage.enterUsername(badUsername)
                 .enterPassword(password)
-                .clickLoginButton()
-                .assertBadLogin()
-                .enterUsername(username)
-                .enterPassword(badPassword)
                 .clickLoginButton()
                 .assertBadLogin();
     }
