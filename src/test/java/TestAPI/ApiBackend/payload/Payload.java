@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Payload implements PayloadConst {
 
 
-
+    private static final String CREATE_PRIV_PROJ = "createMyPrivateProject";
+    private static final int CREATE_PRIV_PROJ_ID = 1271580569;
 
     public String createUser(String username, String password) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(CreateUser.builder()
@@ -67,6 +68,17 @@ public class Payload implements PayloadConst {
                         .params(GetTaskByAssignee.Params.builder().project_id(projectId).query("assignee:nobody").build())
                         .build());
     }
+
+    public String getTaskByAssignee(Integer projectId, String query) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(
+                GetTaskByAssignee.builder()
+                        .jsonrpc(JSONRPC)
+                        .method(GET_TASK_ASSIGNEE)
+                        .id(GET_TASK_ASSIGNEE_ID)
+                        .params(GetTaskByAssignee.Params.builder().project_id(projectId).query("assignee:"+query).build())
+                        .build());
+    }
+
 
     public String createProject(String projectName) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(CreateProject.builder()
@@ -131,6 +143,16 @@ public class Payload implements PayloadConst {
                 .method(GET_ALL_PROJECTS)
                 .id(GET_ALL_PROJECTS_ID)
                 .build());
-} 
+}
+
+    public String createMyPrivateProject(String projName) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(
+                CreatePrivateProject.builder()
+                        .jsonrpc(JSONRPC)
+                        .method(CREATE_PRIV_PROJ)
+                        .id(CREATE_PRIV_PROJ_ID)
+                        .params(new String[]{projName})
+                        .build());
+    }
 }
 
