@@ -26,6 +26,15 @@ public class ApiUtility implements ApiUtilityConstants {
                 .post();
     }
 
+    private Response sendUserRequest(String body, String user, String token) {
+        return RestAssured.given()
+                .baseUri(ENDPOINT)
+                .auth().basic(user, token)
+                .header("Content-Type", "application/json")
+                .body(body)
+                .post();
+    }
+
     private int extractUserId(Response response) {
         return Integer.valueOf(response.getBody().jsonPath().getString("result.id"));
     }
@@ -98,6 +107,12 @@ public class ApiUtility implements ApiUtilityConstants {
         return  task.getBody().jsonPath().getInt("result[0].id");
     }
 
+    public int getTaskId(int projectId, String user) throws JsonProcessingException {
+        Response task = sendRequest(payload.getTaskByAssignee(projectId,user));
+        task.then().statusCode(HTTP_SUCCESS_CODE);
+        return  task.getBody().jsonPath().getInt("result[0].id");
+    }
+
     public ApiUtility assertTaskCreate(String title,  int projectId) throws JsonProcessingException {
         sendRequest(payload.getTaskByAssignee(projectId)).then().assertThat().statusCode(HTTP_SUCCESS_CODE).body("result[0].title", Matchers.equalTo(title));
         return this;
@@ -110,6 +125,12 @@ public class ApiUtility implements ApiUtilityConstants {
 
     public ApiUtility createProject(String projName) throws JsonProcessingException {
         sendRequest(payload.createProject(projName)).then().statusCode(HTTP_SUCCESS_CODE);
+        return this;
+    }
+
+    public ApiUtility createPrivateProject(String projName,String user,String tok) throws JsonProcessingException {
+//        sendUserRequest(payload.createMyPrivateProject(projName),user,tok).then().statusCode(HTTP_SUCCESS_CODE);
+        sendUserRequest(payload.createMyPrivateProject(projName),user,tok).prettyPrint();
         return this;
     }
 

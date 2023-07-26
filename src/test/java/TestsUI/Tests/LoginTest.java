@@ -8,8 +8,9 @@ import org.testng.annotations.Test;
 public class LoginTest {
     private String username = "admin";
     private String password = "admin";
+    private final String badUsername = "qwrt43";
+    private final String badPassword = "adik34";
     private Login loginPage = new Login();
-    private final String URL = "http://localhost/login";
 
     @BeforeClass
     public void setUp() {
@@ -20,15 +21,27 @@ public class LoginTest {
         // Prevent closing the browser after the test
         Configuration.holdBrowserOpen = true;
 
-         loginPage = new Login();
+        this.loginPage = new Login();
+        loginPage.openPage();
     }
 
     @Test
     public void TestLogin(){
-        loginPage.openPage();
         loginPage.enterUsername(username)
                 .enterPassword(password)
                 .clickLoginButton()
                 .assertLogin();
+    }
+
+    @Test
+    public void badLogin(){
+        loginPage.enterUsername(badUsername)
+                .enterPassword(password)
+                .clickLoginButton()
+                .assertBadLogin()
+                .enterUsername(username)
+                .enterPassword(badPassword)
+                .clickLoginButton()
+                .assertBadLogin();
     }
 }

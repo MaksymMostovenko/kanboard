@@ -45,6 +45,13 @@ public class Login extends PageObject {
         return this;
     }
 
+    public Login assertBadLogin(){
+        final By LOC_ERRORMSG = By.xpath("/html/body/div/p");
+        final String ERRORMSG = "Bad username or password";
+        Assert.assertEquals(super.getElement(LOC_ERRORMSG).getText().trim(),ERRORMSG);
+        return this;
+    }
+
     public boolean isErrorMessageDisplayed() {
         return $(errorMessage).isDisplayed();
     }
