@@ -20,7 +20,7 @@ public class Login extends PageObject {
         super();
     }
 
-    public PageObject openPage(){
+    public Login openPage(){
         open(URL);
         return this;
     }
