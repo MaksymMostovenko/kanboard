@@ -1,22 +1,19 @@
 pipeline {
     agent any
     environment {
-        // Встановлюємо змінну зі шляхом до Maven, якщо він не знаходиться в змінних середовища
         MAVEN_HOME = tool 'Maven'
+    }
+    triggers {
+        cron('0 8 * * *')
     }
     stages {
         stage('Checkout') {
             steps {
-                // Крок для вибору вихідного коду проекту (зазвичай з репозиторію)
-                // Наприклад: git clone, svn checkout і т.д.
-                // Ви можете використовувати різні SCM системи залежно від вашого проекту.
-                // Наприклад, для Git:
                 git branch: 'Capstone', url: 'https://github.com/MaksymMostovenko/CapStoneProject.git'
             }
         }
         stage('Build') {
             steps {
-                // Крок для компіляції проекту
                 sh "${MAVEN_HOME}/bin/mvn clean compile"
             }
         }
